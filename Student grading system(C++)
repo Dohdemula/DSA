@@ -1,0 +1,87 @@
+#include <iostream>
+#include <cstring>
+
+const int MAX_STUDENTS = 40;
+
+struct Course {
+    std::string course_code;
+    std::string course_name;
+};
+
+struct Grade {
+    int mark;
+    char the_grade;
+};
+
+struct Student {
+    std::string registration_number;
+    std::string name;
+    int age;
+    Course course;
+    Grade grades;
+    bool grades_calculated; // Flag to ensure grades cannot be altered
+
+    // Function to calculate and set the grade based on the mark
+    void calculateGrade() {
+        grades_calculated = true; // Set the flag to true
+        if (grades.mark > 69)
+            grades.the_grade = 'A';
+        else if (grades.mark > 59)
+            grades.the_grade = 'B';
+        else if (grades.mark > 49)
+            grades.the_grade = 'C';
+        else if (grades.mark > 39)
+            grades.the_grade = 'D';
+        else
+            grades.the_grade = 'E';
+    }
+};
+
+int main() {
+    Student students[MAX_STUDENTS];
+    int num_students = 0;
+
+    // Function to add a student
+    auto addStudent = [&](const Student& new_student) {
+        if (num_students < MAX_STUDENTS) {
+            students[num_students] = new_student;
+            num_students++;
+        } else {
+            std::cout << "Maximum number of students reached." << std::endl;
+        }
+    };
+
+    // Function to edit a student's details
+    auto editStudent = [&](const std::string& reg_number, const Student& updated_student) {
+        for (int i = 0; i < num_students; i++) {
+            if (students[i].registration_number == reg_number) {
+                students[i] = updated_student;
+                break;
+            }
+        }
+    };
+
+    // Function to add marks and calculate grades
+    auto addMarksAndCalculateGrade = [&](const std::string& reg_number, int mark) {
+        for (int i = 0; i < num_students; i++) {
+            if (students[i].registration_number == reg_number) {
+                students[i].grades.mark = mark;
+                students[i].calculateGrade();
+                break;
+            }
+        }
+    };
+
+    // Example usage:
+    Student new_student{"123", "John Doe", 20, {"CS101", "Introduction to Computer Science"}, {75, 'A'}, false};
+    addStudent(new_student);
+
+    // Edit student details
+    Student updated_student{"123", "John Doe", 21, {"CS102", "Advanced Computer Science"}, {0, 'E'}, false};
+    editStudent("123", updated_student);
+
+    // Add marks and calculate grades
+    addMarksAndCalculateGrade("123", 80);
+
+    return 0;
+}
