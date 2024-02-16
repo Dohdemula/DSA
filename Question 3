@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+bool containsDuplicate(int* nums, int numsSize) {
+    // Define a hash set to store unique elements
+    bool hashSet[1000001] = {false}; // Assuming the range of integers is [-10^5, 10^5]
+
+    for (int i = 0; i < numsSize; i++) {
+        if (hashSet[nums[i] + 100000]) {
+            return true; // Found a duplicate
+        }
+        hashSet[nums[i] + 100000] = true; // Mark the element as seen
+    }
+
+    return false; // No duplicates found
+}
+
+int main() {
+    int nums[] = {1, 2, 3, 4, 5}; // Example array
+    int numsSize = sizeof(nums) / sizeof(nums[0]);
+
+    if (containsDuplicate(nums, numsSize)) {
+        printf("The array contains duplicates.\n");
+    } else {
+        printf("The array does not contain duplicates.\n");
+    }
+
+    return 0;
+}
